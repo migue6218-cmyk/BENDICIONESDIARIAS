@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jesucristo te bendice 2025</title>
+    <style>
+        body { background:#000; color:gold; font-family:"Arial Black"; text-align:center; padding:30px; margin:0; }
+        h1 { font-size:48px; text-shadow:0 0 30px gold,0 0 60px yellow; }
+        .egg { font-size:120px; margin:20px; }
+        input { padding:18px; font-size:24px; width:360px; background:#111; color:gold; border:4px solid gold; border-radius:20px; margin:20px; }
+        button { padding:20px 60px; font-size:30px; background:gold; color:black; border:none; border-radius:25px; cursor:pointer; box-shadow:0 0 40px gold; }
+        button:hover { transform:scale(1.15); }
+        #resultado { margin:50px auto; max-width:500px; }
+        #resultado img { max-width:100%; border:8px solid gold; border-radius:25px; box-shadow:0 0 60px gold; }
+        #descargar { display:block; margin:25px auto; padding:18px 50px; background:gold; color:black; text-decoration:none; border-radius:20px; font-weight:bold; font-size:24px; box-shadow:0 0 30px gold; }
+    </style>
+</head>
+<body>
+    <h1>JESUCRISTO TE BENDICE</h1>
+    <div class="egg">Holy eggplant</div>
+    <input type="text" id="nombre" placeholder="¿Quién recibe la bendición?" autofocus>
+    <br><br>
+    <button onclick="generar()">DAR BENDICIÓN</button>
+    <div id="resultado"></div>
+
+    <script>
+        function generar() {
+            const nombre = document.getElementById("nombre").value.trim() || "Fiel";
+            const numero = Math.floor(Math.random() * 9000) + 1000;
+            document.getElementById("resultado").innerHTML = "<p style='color:gold;font-size:28px;'>Bendición en camino...</p>";
+
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            const posibles = ["jesus1.jpg","jesus2.jpg","jesus3.jpg","jesucristo.jpg","cristo.jpg","jesus.jpg","jesus.png","cristo.png"];
+            let imagenes = [];
+            let cargadas = 0;
+
+            posibles.forEach(src => {
+                const img = new Image();
+                img.onload = () => { imagenes.push(img); cargadas++; if (cargadas === posibles.length) continuar(); };
+                img.onerror = () => { cargadas++; if (cargadas === posibles.length) continuar(); };
+                img.src = src;
+            });
+
+            function continuar() {
+                if (imagenes.length === 0) { alert("No hay Jesús"); return; }
+
+                const jesus = imagenes[Math.floor(Math.random() * imagenes.length)];
+                canvas.width = jesus.width;
+                canvas.height = jesus.height;
+                ctx.drawImage(jesus, 0, 0);
+
+                // === EXACTAMENTE IGUAL QUE TU CÓDIGO PYTHON ===
+                ctx.font = "34px Arial";
+                ctx.textAlign = "center";
+                ctx.strokeStyle = "black";
+                ctx.lineWidth = 6;
+                ctx.fillStyle = "yellow";
+
+                const y_inicio = canvas.height / 2 + 20;
+
+                ctx.strokeText(nombre.toUpperCase(), canvas.width/2, y_inicio);
+                ctx.fillText(nombre.toUpperCase(), canvas.width/2, y_inicio);
+
+                ctx.strokeText("RECIBE " + numero, canvas.width/2, y_inicio + 45);
+                ctx.fillText("RECIBE " + numero, canvas.width/2, y_inicio + 45);
+
+                ctx.strokeText("BENDICIONES", canvas.width/2, y_inicio + 90);
+                ctx.fillText("BENDICIONES", canvas.width/2, y_inicio + 90);
+
+                // Berenjena transparente (igual que en Python)
+                const egg = new Image();
+                egg.onload = () => {
+                    ctx.drawImage(egg, canvas.width/2 - 65, canvas.height - 160, 130, 130);
+                    mostrar();
+                };
+                egg.onerror = mostrar;
+                egg.src = "berenjena.png";
+
+                function mostrar() {
+                    const url = canvas.toDataURL("image/png", 1.0);
+                    document.getElementById("resultado").innerHTML = `
+                        <img src="${url}" alt="Bendición">
+                        <br>
+                        <a href="${url}" download="Jesucristo_bendice_a_${nombre.replace(/ /g,"_")}_${numero}.png" id="descargar">
+                            DESCARGAR BENDICIÓN
+                        </a>
+                    `;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
